@@ -1,0 +1,43 @@
+name: Release Obsidian plugin
+
+on:
+    push:
+        tags:
+            - "*"
+env:
+    PLUGIN_NAME: obsidian-diary-merger
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: "18.x"
+
+            - name: Build and Package
+              run: |
+                  npm install
+                  npm run build
+                  # 创建包含所有文件的ZIP（不单独上传文件）
+                  zip -r ${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip \
+                    main.js \
+                    manifest.json \
+                    styles.css
+                  # 输出ZIP文件名供后续步骤使用
+                  echo "ZIP_FILE=${{ env.PLUGIN_NAME }}-${{ github.ref_name }}.zip" >> $GITHUB_ENV
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v1 # 使用更灵活的上传工具
+              with:
+                  tag_name: ${{ github.ref_name }} # 直接使用标签名 (v1.0.6-bata)
+                  name: Release ${{ github.ref_name }}
+                  files: ${{ env.ZIP_FILE }} # 只上传ZIP文件
+                  draft: false
+                  prerelease: false
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

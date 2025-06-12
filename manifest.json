@@ -1,10 +1,10 @@
 {
 	"id": "inline-code-copy",
 	"name": "Inline Code Copy",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "Click to copy inline code snippets",
 	"author": "lspzc",
-	"authorUrl": "https://your-website.com",
+	"authorUrl": "https://github.com/lspzc/obsidian-inlineCode-copy",
 	"isDesktopOnly": false
 }
