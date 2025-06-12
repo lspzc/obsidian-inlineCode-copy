@@ -15,9 +15,8 @@
   English |
   <a href="./README_CN.md">中文</a>
 </p>
-# 插件：Inline Code Copy 说明文档
 
-![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-4.webp)
+# 插件：Inline Code Copy 说明文档
 
 ## 1 是什么
 
