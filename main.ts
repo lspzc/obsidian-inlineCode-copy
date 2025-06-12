@@ -397,20 +397,20 @@ class ClickToCopySettingTab extends PluginSettingTab {
 		smallTip.append("\n3. " + t.Precautions3);
 		smallTip.createEl("a", {
 			text: "github",
-			href: "https://github.com/lspzc/obsidian-diary-merger/blob/master/documentation/%E6%8F%92%E4%BB%B6%EF%BC%9ADiary%20Merger%20%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md",
+			href: "https://github.com/lspzc/obsidian-inlineCode-copy",
 			cls: "inline-code-copy-smallTip-link",
 		});
 		smallTip.append(" or ");
 		smallTip.createEl("a", {
 			text: "gitee",
-			href: "https://gitee.com/lspzc/obsidain-share/blob/master/%E6%8F%92%E4%BB%B6/Diary%20Merger/%E6%8F%92%E4%BB%B6%EF%BC%9ADiary%20Merger%20%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md",
+			href: "https://gitee.com/lspzc/obsidain-share",
 			cls: "inline-code-copy-smallTip-link",
 		});
 		// 提交 Issues
 		smallTip.append("\n4. " + t.Precautions4);
 		smallTip.createEl("a", {
 			text: " Submit Issues",
-			href: "https://github.com/lspzc/obsidian-diary-merger/issues",
+			href: "https://github.com/lspzc/obsidian-inlineCode-copy/issues",
 			cls: "inline-code-copy-smallTip-link",
 		});
 
