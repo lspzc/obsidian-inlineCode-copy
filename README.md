@@ -15,9 +15,8 @@
   English |
   <a href="./README_CN.md">中文</a>
 </p>
-# Plug-in: Inline Code Copy Documentation
 
-![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-4.webp)
+# Plug-in: Inline Code Copy Documentation
 
 ## 1 What is it?
 
@@ -55,7 +54,7 @@ Gitee address: [lspzc/obsidian-share](https://gitee.com/lspzc/obsidain-share)
 
 ### 3.3 Installing Plugins
 
-Without going into too much detail here, you can refer to: [PKMer_Obsidian Community Plugin Installation](https://pkmer.cn/Pkmer-Docs/10-obsidian/obsidian%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6/) obsidian%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85/#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85).
+Without going into too much detail here
 
 ## 3.4 Plugin Settings
 
@@ -99,7 +98,7 @@ Aurora Purple Mist and Black Gold Luxury are shown here!
 
 ![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-3.webp)
 
-\### 4.5 Bubble duration and feedback effect duration
+### 4.5 Bubble duration and feedback effect duration
 
 Duration is up to your preference
 
