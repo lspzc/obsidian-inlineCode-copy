@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/lspzc/obsidian-diary-merger/releases/download/v-1.1.0-bata/obsidian-diary-merger-v-1.1.0-bata.zip">Download</a> |
+  <a href="https://github.com/lspzc/obsidian-inlineCode-copy/releases">Download</a> |
   中文 |
   <a href="./README_EN.md">English</a>
 </p>
