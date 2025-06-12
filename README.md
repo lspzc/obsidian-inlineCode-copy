@@ -1,94 +1,106 @@
-# Obsidian Sample Plugin
+<p align="center">
+  <img alt="GitHub Repo Stars" src="https://img.shields.io/github/stars/lspzc/obsidian-diary-merger">
+  <img alt="GitHub Repo Forks" src="https://img.shields.io/github/forks/lspzc/obsidian-diary-merger">
+</p>
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+<p align="center">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/lspzc/obsidian-diary-merger">
+  <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/lspzc/obsidian-diary-merger/total">
+  <img alt="GitHub Repo License" src="https://img.shields.io/github/license/lspzc/obsidian-diary-merger">
+  <img alt="GitHub Repo Issues" src="https://img.shields.io/github/issues/lspzc/obsidian-diary-merger">
+</p>
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+<p align="center">
+  <a href="https://github.com/lspzc/obsidian-diary-merger/releases/download/v-1.1.0-bata/obsidian-diary-merger-v-1.1.0-bata.zip">Download</a> |
+  English |
+  <a href="./README_CN.md">中文</a>
+</p>
+# Plug-in: Inline Code Copy Documentation
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-4.webp)
 
-## First time developing plugins?
+## 1 What is it?
 
-Quick starting guide for new plugin devs:
+An obsidian plugin
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+What the plugin does: Copy in-line code with a single click (read view) or double click (live preview).
 
-## Releasing new releases
+## 2 Why
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+Inline code syntax
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
-
-## Adding your plugin to the community plugin list
-
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
-
-## How to use
-
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
-
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
-
-## Funding URL
-
-You can include funding URLs where people who use your plugin can financially support it.
-
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
-
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
+```md 
+`` 
 ```
 
-If you have multiple URLs, you can also do:
+There are a lot of situations where you need to use inline code, such as some class names, some very small code snippets, some special text that conflicts with md syntax, or even some text that you want to copy at a later time, **but obsidian strangely has code block copying, but not inline code copying**.
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+## 3 How it works
 
-## API Documentation
+## 3.1 Plugin environment
 
-See https://github.com/obsidianmd/obsidian-api
+Plugin development test environment: window11 system, obsidian version 1.8.10
+
+Since I don't have a mac device, I didn't test it. **I suggest you find a test library and try it first**.
+
+Mobile not tested
+
+### 3.2 Downloading Plugins
+
+Currently, the plugin is not yet on the plugin market, so you need to download the plugin by yourself.
+
+GitHub address: [lspzc/obsidian-inlineCode-copy](https://github.com/lspzc/obsidian-inlineCode-copy)
+
+Gitee address: [lspzc/obsidian-share](https://gitee.com/lspzc/obsidain-share)
+
+### 3.3 Installing Plugins
+
+Without going into too much detail here, you can refer to: [PKMer_Obsidian Community Plugin Installation](https://pkmer.cn/Pkmer-Docs/10-obsidian/obsidian%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6/) obsidian%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85/#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85).
+
+## 3.4 Plugin Settings
+
+### 3.5 Switch between Chinese and English with one click
+
+Here I want to complain, for my English is not very good people, some foreign big brother developed complex plug-ins, see my brain is a pain, so I decided, directly in the document a key to switch between English and Chinese 🎉
+
+![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img.webp)
+
+## 4 Whether to enable live preview copying
+
+Enabled by default, this option is for users who only like to click copy in view mode.
+
+## 4.1 Live preview trigger mode
+
+The default is double-click trigger, single-click is reserved for in-line code editing, this is to allow users to customize the shortcut key to trigger copying.
+
+### 4.2 Show bubble alerts
+
+By default, I've crafted a number of bubble styles, which you can't miss.
+
+You can also customize the bubble style, and then give the bubble style a wild and crazy name, haha!
+
+Of course, we can't rule out that some users don't like the bubble pop-up box, we also provide the option to turn it off, but after turning it off, the real-time preview mode won't have the copying success tip, and the reading mode will have the background of the copied text change.
+
+### 4.3 Position of bubble tips
+
+Default is at the top, you can choose your favorite position
+
+### 4.4 Bubble themes and customized themes
+
+Preset a lot of styles, you can try one by one
+
+![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-1.webp)
+
+Not satisfied? It's okay, use a custom theme, your theme is your call!
+
+Aurora Purple Mist and Black Gold Luxury are shown here!
+
+![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-2.webp)
+
+![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-3.webp)
+
+\### 4.5 Bubble duration and feedback effect duration
+
+Duration is up to your preference
+
+Feedback effect time: only in view mode (because double clicking on obsidian in edit mode gives you the selected style)

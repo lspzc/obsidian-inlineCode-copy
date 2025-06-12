@@ -1,16 +1,4 @@
-import {
-	Plugin,
-	App,
-	Setting,
-	PluginSettingTab,
-	TextComponent,
-} from "obsidian";
-
-interface BubbleTheme {
-	name: string;
-	bgColor: string;
-	textColor: string;
-}
+import { Plugin, App, Setting, PluginSettingTab } from "obsidian";
 
 interface ClickToCopySettings {
 	enableLivePreview: boolean;
@@ -18,8 +6,8 @@ interface ClickToCopySettings {
 	showBubble: boolean;
 	bubbleDuration: number;
 	bubblePosition: "top" | "bottom" | "left" | "right";
-	bubbleTheme: string; // 存储当前选择的主题名称
-	customThemes: BubbleTheme[]; // 存储用户自定义主题
+	bubbleBgColor: string;
+	bubbleTextColor: string;
 	feedbackDuration: number;
 	language: "en" | "zh";
 }
@@ -30,64 +18,18 @@ const DEFAULT_SETTINGS: ClickToCopySettings = {
 	showBubble: true,
 	bubbleDuration: 1500,
 	bubblePosition: "top",
-	bubbleTheme: "default",
-	customThemes: [],
+	bubbleBgColor: "linear-gradient(145deg, #2ecc71, #27ae60)",
+	bubbleTextColor: "white",
 	feedbackDuration: 1500,
 	language: "en",
 };
-
-// 预设主题
-const PRESET_THEMES: BubbleTheme[] = [
-	{
-		name: "default",
-		bgColor: "#181818",
-		textColor: "#ffffff",
-	},
-	{
-		name: "深邃夜空 | midnight-sky",
-		bgColor:
-			"linear-gradient(90deg, #0F2027 0%, #203A43 50%, #2C5364 100%)",
-		textColor: "#ffffff",
-	},
-	{
-		name: "极光紫雾 | aurora-purple",
-		bgColor: "linear-gradient(to right, #654EA3 0%, #EAAFC8 100%)",
-		textColor: "#ffffff",
-	},
-	{
-		name: "落日熔金 | sunset-gold",
-		bgColor: "linear-gradient(45deg, #FF416C 0%, #FF4B2B 100%)",
-		textColor: "#ffffff",
-	},
-	{
-		name: "冰川之境 | glacier-blue",
-		bgColor: "linear-gradient(135deg, #00B4DB 0%, #0083B0 100%)",
-		textColor: "#ffffff",
-	},
-	{
-		name: "莫兰迪灰粉 | muted-pink",
-		bgColor: "linear-gradient(to bottom, #E6DADA 0%, #274046 100%)",
-		textColor: "#333333",
-	},
-	{
-		name: "黑金奢华 | black-gold",
-		bgColor:
-			"linear-gradient(90deg, #000000 0%, #434343 50%, #000000 100%)",
-		textColor: "#FFD700",
-	},
-	{
-		name: "翡翠绿 | emerald-green",
-		bgColor: "linear-gradient(120deg, #11998E 0%, #38EF7D 100%)",
-		textColor: "#ffffff",
-	},
-];
 
 // 多语言包
 const i18n = {
 	en: {
 		copied: (text: string) => `Copied: ${text}`,
 		copyFailed: "Copy failed!",
-		settingsTitle: "Inline Code Copy Settings",
+		settingsTitle: "Click to Copy Settings",
 		language: "Language",
 		languageDesc: "Select display language",
 		enableLivePreview: "Enable Live Preview",
@@ -112,28 +54,11 @@ const i18n = {
 		bottom: "Bottom",
 		left: "Left",
 		right: "Right",
-		bubbleTheme: "Bubble Theme",
-		bubbleThemeDesc: "Select a predefined theme for the bubble",
-		addCustomTheme: "Add Custom Theme",
-		addCustomThemeDesc: "Create your own bubble theme",
-		themeNamePlaceholder: "Theme name",
-		bgColorPlaceholder: "Background (CSS value)",
-		textColorPlaceholder: "Text color (CSS value)",
-		addThemeButton: "Add Theme",
-		deleteThemeButton: "Delete",
-		customThemesTitle: "Your Custom Themes",
-		Precautions: "Plug-in Notes",
-		Precautions1:
-			"If you find that the changes do not work, restart Obsidian",
-		Precautions2:
-			"Custom bubble styles with background support for gradient colors of the form linear-gradient().",
-		Precautions3: "Plugin Documentation Address: ",
-		Precautions4: "If you encounter problems, you can",
 	},
 	zh: {
 		copied: (text: string) => `已复制: ${text}`,
 		copyFailed: "复制失败!",
-		settingsTitle: "行内代码复制插件设置",
+		settingsTitle: "单击复制设置",
 		language: "语言",
 		languageDesc: "选择显示语言",
 		enableLivePreview: "启用实时预览复制",
@@ -158,26 +83,12 @@ const i18n = {
 		bottom: "下方",
 		left: "左侧",
 		right: "右侧",
-		bubbleTheme: "气泡主题",
-		bubbleThemeDesc: "选择预设的气泡样式主题",
-		addCustomTheme: "添加自定义主题",
-		addCustomThemeDesc: "创建你自己的气泡样式",
-		themeNamePlaceholder: "主题名称",
-		bgColorPlaceholder: "背景色(CSS值)",
-		textColorPlaceholder: "文字颜色(CSS值)",
-		addThemeButton: "添加主题",
-		deleteThemeButton: "删除",
-		customThemesTitle: "你的自定义主题",
-		Precautions: "插件注意事项",
-		Precautions1: "如果发现更改无效，请重新启动 Obsidian",
-		Precautions2: "自定义气泡背景支持 linear-gradient() 形式渐变色",
-		Precautions3: "插件文档地址：",
-		Precautions4: "如果遇到问题，可以",
 	},
 };
 
 export default class ClickToCopyPlugin extends Plugin {
 	settings: ClickToCopySettings;
+	private clickTimeout: number | null = null;
 
 	async onload() {
 		await this.loadSettings();
@@ -272,24 +183,8 @@ export default class ClickToCopyPlugin extends Plugin {
 		bubbleEl.className = "click-to-copy-bubble";
 
 		// 应用用户自定义样式
-		// 查找当前选择的主题
-		let currentTheme = PRESET_THEMES.find(
-			(t) => t.name === this.settings.bubbleTheme
-		);
-		if (!currentTheme) {
-			currentTheme = this.settings.customThemes.find(
-				(t) => t.name === this.settings.bubbleTheme
-			);
-		}
-
-		// 如果没找到，使用默认主题
-		if (!currentTheme) {
-			currentTheme = PRESET_THEMES[0];
-		}
-
-		// 应用样式
-		bubbleEl.style.background = currentTheme.bgColor;
-		bubbleEl.style.color = currentTheme.textColor;
+		bubbleEl.style.background = this.settings.bubbleBgColor;
+		bubbleEl.style.color = this.settings.bubbleTextColor;
 
 		document.body.appendChild(bubbleEl);
 
@@ -363,9 +258,6 @@ export default class ClickToCopyPlugin extends Plugin {
 
 class ClickToCopySettingTab extends PluginSettingTab {
 	plugin: ClickToCopyPlugin;
-	hemeNameInput: TextComponent;
-	bgColorInput: TextComponent;
-	textColorInput: TextComponent;
 
 	constructor(app: App, plugin: ClickToCopyPlugin) {
 		super(app, plugin);
@@ -379,40 +271,7 @@ class ClickToCopySettingTab extends PluginSettingTab {
 		const lang = this.plugin.settings.language;
 		const t = i18n[lang];
 
-		containerEl.createEl("h3", { text: t.settingsTitle });
-
-		// === 顶部提示 ===
-		const tip = containerEl.createEl("div", { cls: "tip" });
-		tip.createEl("div", {
-			text: t.Precautions,
-			cls: "tip_title",
-		});
-
-		// 创建提示容器
-		const smallTip = tip.createEl("small", { cls: "tip_txt" });
-
-		smallTip.append("1. " + t.Precautions1);
-		smallTip.append("\n2. " + t.Precautions2);
-		// 点击查看文档
-		smallTip.append("\n3. " + t.Precautions3);
-		smallTip.createEl("a", {
-			text: "github",
-			href: "https://github.com/lspzc/obsidian-diary-merger/blob/master/documentation/%E6%8F%92%E4%BB%B6%EF%BC%9ADiary%20Merger%20%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md",
-			cls: "inline-code-copy-smallTip-link",
-		});
-		smallTip.append(" or ");
-		smallTip.createEl("a", {
-			text: "gitee",
-			href: "https://gitee.com/lspzc/obsidain-share/blob/master/%E6%8F%92%E4%BB%B6/Diary%20Merger/%E6%8F%92%E4%BB%B6%EF%BC%9ADiary%20Merger%20%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.md",
-			cls: "inline-code-copy-smallTip-link",
-		});
-		// 提交 Issues
-		smallTip.append("\n4. " + t.Precautions4);
-		smallTip.createEl("a", {
-			text: " Submit Issues",
-			href: "https://github.com/lspzc/obsidian-diary-merger/issues",
-			cls: "inline-code-copy-smallTip-link",
-		});
+		containerEl.createEl("h2", { text: t.settingsTitle });
 
 		// 语言设置
 		new Setting(containerEl)
@@ -491,92 +350,33 @@ class ClickToCopySettingTab extends PluginSettingTab {
 					)
 			);
 
-		// 在设置面板中添加气泡主题选择
+		// 气泡背景色
 		new Setting(containerEl)
-			.setName(t.bubbleTheme)
-			.setDesc(t.bubbleThemeDesc)
-			.addDropdown((dropdown) => {
-				// 添加预设主题
-				PRESET_THEMES.forEach((theme) => {
-					dropdown.addOption(theme.name, theme.name);
-				});
-
-				// 添加自定义主题
-				this.plugin.settings.customThemes.forEach((theme) => {
-					dropdown.addOption(theme.name, theme.name);
-				});
-
-				dropdown
-					.setValue(this.plugin.settings.bubbleTheme)
+			.setName(t.bubbleBgColor)
+			.setDesc(t.bubbleBgColorDesc)
+			.addText((text) =>
+				text
+					.setPlaceholder("e.g., #2ecc71 or linear-gradient(...)")
+					.setValue(this.plugin.settings.bubbleBgColor)
 					.onChange(async (value) => {
-						this.plugin.settings.bubbleTheme = value;
+						this.plugin.settings.bubbleBgColor = value;
 						await this.plugin.saveSettings();
-					});
-			});
-
-		// 添加自定义主题管理部分
-		const customThemeContainer = containerEl.createDiv(
-			"custom-theme-container"
-		);
-
-		// 添加新主题的表单
-		// 修正后的自定义主题添加部分
-		new Setting(customThemeContainer)
-			.setName(t.addCustomTheme)
-			.setDesc(t.addCustomThemeDesc)
-			.addText((text) => {
-				text.setPlaceholder(t.themeNamePlaceholder).setValue("");
-				// 存储文本组件引用
-				this.hemeNameInput = text;
-			})
-			.addText((text) => {
-				text.setPlaceholder(t.bgColorPlaceholder).setValue("");
-				this.bgColorInput = text;
-			})
-			.addText((text) => {
-				text.setPlaceholder(t.textColorPlaceholder).setValue("");
-				this.textColorInput = text;
-			})
-			.addButton((button) =>
-				button.setButtonText(t.addThemeButton).onClick(async () => {
-					const name = this.hemeNameInput.getValue();
-					const bgColor = this.bgColorInput.getValue();
-					const textColor = this.textColorInput.getValue();
-
-					if (name && bgColor && textColor) {
-						this.plugin.settings.customThemes.push({
-							name,
-							bgColor,
-							textColor,
-						});
-						await this.plugin.saveSettings();
-						this.display(); // 刷新设置面板
-
-						// 清空输入框
-						this.hemeNameInput.setValue("");
-						this.bgColorInput.setValue("");
-						this.textColorInput.setValue("");
-					}
-				})
+					})
 			);
 
-		// 显示当前自定义主题列表
-		this.plugin.settings.customThemes.forEach((theme) => {
-			new Setting(customThemeContainer)
-				.setName(theme.name)
-				.addButton((button) =>
-					button
-						.setButtonText(t.deleteThemeButton)
-						.onClick(async () => {
-							this.plugin.settings.customThemes =
-								this.plugin.settings.customThemes.filter(
-									(t) => t.name !== theme.name
-								);
-							await this.plugin.saveSettings();
-							this.display(); // 刷新设置面板
-						})
-				);
-		});
+		// 气泡文字颜色
+		new Setting(containerEl)
+			.setName(t.bubbleTextColor)
+			.setDesc(t.bubbleTextColorDesc)
+			.addText((text) =>
+				text
+					.setPlaceholder("e.g., white or #ffffff")
+					.setValue(this.plugin.settings.bubbleTextColor)
+					.onChange(async (value) => {
+						this.plugin.settings.bubbleTextColor = value;
+						await this.plugin.saveSettings();
+					})
+			);
 
 		// 气泡显示时间设置
 		new Setting(containerEl)

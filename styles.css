@@ -1,8 +1,91 @@
-/*
+/* 基础样式 */
+/* 修改后的样式 */
+.markdown-reading-view code {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.cm-content .cm-inline-code {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-If your plugin does not need CSS, delete this file.
+/* 气泡基础样式 */
+.click-to-copy-bubble {
+    position: absolute;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 300px;
+    word-break: break-word;
+    animation: bubbleAppear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-*/
+/* 动画 */
+@keyframes bubbleAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.fade-out {
+    animation: bubbleDisappear 0.3s forwards !important;
+}
+
+@keyframes bubbleDisappear {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.9);
+    }
+}
+
+/* 阅读模式特殊处理，同时适配亮暗模式 */
+.theme-light .markdown-reading-view .copied {
+    background-color: rgba(46, 204, 113, 0.15) !important;
+}
+
+.theme-dark .markdown-reading-view .copied {
+    background-color: rgba(46, 204, 113, 0.25) !important;
+}
+
+/* 滑块样式增强 */
+.setting-item-control input[type="range"] {
+    width: 200px;
+    margin-right: 10px;
+}
+
+/* ===== 用户设置界面样式 ===== */
+.tip {
+    border: 1px solid var(--background-modifier-border);
+    padding: 10px;
+}
+
+.tip_title {
+    font-weight: 600;
+    color: red;
+}
+
+.tip_txt {
+    /* color: red; */
+    white-space: pre-line;
+}
+
+.inline-code-copy-smallTip-link {
+    text-decoration: none;
+}
