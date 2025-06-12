@@ -16,90 +16,90 @@
   <a href="./README_CN.md">中文</a>
 </p>
 
-# Plug-in: Inline Code Copy Documentation
+# 插件：Inline Code Copy 说明文档
 
-## 1 What is it?
+## 1 是什么
 
-An obsidian plugin
+一个 obsidian 插件
 
-What the plugin does: Copy in-line code with a single click (read view) or double click (live preview).
+插件功能：单击（阅读视图）或双击（实时预览）复制行内代码
 
-## 2 Why
+## 2 为什么
 
-Inline code syntax
+行内代码语法
 
-```md 
-`` 
+```md
+` `
 ```
 
-There are a lot of situations where you need to use inline code, such as some class names, some very small code snippets, some special text that conflicts with md syntax, or even some text that you want to copy at a later time, **but obsidian strangely has code block copying, but not inline code copying**.
+很多情况下都需要用到行内代码，比如一些类名，一些很小的代码片段，一些特殊的与 md 语法冲突的文字，甚至是一些后期想要复制的文字，**但 obsidian 很奇怪，有代码块复制，却没有行内代码复制**。
 
-## 3 How it works
+## 3 怎么用
 
-## 3.1 Plugin environment
+### 3.1 插件环境
 
-Plugin development test environment: window11 system, obsidian version 1.8.10
+插件开发测试环境：window11系统，obsidian 版本 1.8.10
 
-Since I don't have a mac device, I didn't test it. **I suggest you find a test library and try it first**.
+由于本人没有 mac 设备，所以未作测试，**建议先找一个测试库试一试**
 
-Mobile not tested
+移动端未测试
 
-### 3.2 Downloading Plugins
+### 3.2 下载插件
 
-Currently, the plugin is not yet on the plugin market, so you need to download the plugin by yourself.
+目前插件尚未上架插件市场，目前需要自行下载插件
 
-GitHub address: [lspzc/obsidian-inlineCode-copy](https://github.com/lspzc/obsidian-inlineCode-copy)
+GitHub 地址：[lspzc/obsidian-inlineCode-copy](https://github.com/lspzc/obsidian-inlineCode-copy)
 
-Gitee address: [lspzc/obsidian-share](https://gitee.com/lspzc/obsidain-share)
+Gitee 地址：[lspzc/obsidain分享](https://gitee.com/lspzc/obsidain-share)
 
-### 3.3 Installing Plugins
+### 3.3 安装插件
 
-Without going into too much detail here
+这里不过多介绍，可以参考：[PKMer_Obsidian 社区插件的安装](https://pkmer.cn/Pkmer-Docs/10-obsidian/obsidian%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6/obsidian%E7%A4%BE%E5%8C%BA%E6%8F%92%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85/#%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85) 中的手动安装
 
-## 3.4 Plugin Settings
+### 3.4 插件设置
 
-### 3.5 Switch between Chinese and English with one click
+### 3.5 一键切换中英文
 
-Here I want to complain, for my English is not very good people, some foreign big brother developed complex plug-ins, see my brain is a pain, so I decided, directly in the document a key to switch between English and Chinese 🎉
+这里我要吐槽了，对于我一个英语不太好的人来说，一些国外大佬开发的复杂插件，看的我是脑壳痛，于是我决定，直接在文档内一键切换中英文🎉
 
 ![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img.webp)
 
-## 4 Whether to enable live preview copying
+## 4 是否启用实时预览复制
 
-Enabled by default, this option is for users who only like to click copy in view mode.
+默认开启，这个选项是提供给只喜欢在阅览模式点击复制的用户
 
-## 4.1 Live preview trigger mode
+### 4.1 实时预览触发方式
 
-The default is double-click trigger, single-click is reserved for in-line code editing, this is to allow users to customize the shortcut key to trigger copying.
+默认是双击触发，单击要留给对行内代码进行编辑时使用，这里是准备后续让用户自定义触发复制的快捷键
 
-### 4.2 Show bubble alerts
+### 4.2 显示气泡提示
 
-By default, I've crafted a number of bubble styles, which you can't miss.
+默认显示，我精心制作了好多气泡样式，这你不得试试？
 
-You can also customize the bubble style, and then give the bubble style a wild and crazy name, haha!
+你还可以自定义气泡样式，再给气泡样式起一个狂拽天的名字，哈哈
 
-Of course, we can't rule out that some users don't like the bubble pop-up box, we also provide the option to turn it off, but after turning it off, the real-time preview mode won't have the copying success tip, and the reading mode will have the background of the copied text change.
+当然，不排除有些用户不喜欢气泡弹框，也提供了关闭选项，但是关闭后，实时预览模式便没有复制成功提示了，阅览模式会有被复制文字背景的变化
 
-### 4.3 Position of bubble tips
+### 4.3 气泡提示的位置
 
-Default is at the top, you can choose your favorite position
+默认在上方，你可以选择你喜欢的位置
 
-### 4.4 Bubble themes and customized themes
+### 4.4 气泡主题与自定义主题
 
-Preset a lot of styles, you can try one by one
+预设了很多样式，大家可以挨个试一试
 
 ![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-1.webp)
 
-Not satisfied? It's okay, use a custom theme, your theme is your call!
+不满意？没关系，使用自定义主题，你的主题你做主
 
-Aurora Purple Mist and Black Gold Luxury are shown here!
+这里展示极光紫雾与黑金奢华的效果
 
 ![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-2.webp)
 
 ![](./attachments/20250612_插件：Inline%20Code%20Copy%20说明文档-img-3.webp)
 
-### 4.5 Bubble duration and feedback effect duration
+### 4.5 气泡显示时间与反馈效果时间
 
-Duration is up to your preference
+持续时间看大家喜好
 
-Feedback effect time: only in view mode (because double clicking on obsidian in edit mode gives you the selected style)
+反馈效果时间：只在阅览模式下有（因为编辑模式下双击 obsidian 会有选中的样式）
