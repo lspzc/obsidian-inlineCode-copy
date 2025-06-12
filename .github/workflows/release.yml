@@ -5,7 +5,7 @@ on:
         tags:
             - "*"
 env:
-    PLUGIN_NAME: obsidian-diary-merger
+    PLUGIN_NAME: inline-code-copy
 
 jobs:
     build:
