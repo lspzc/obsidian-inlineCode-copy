@@ -1,19 +1,19 @@
 <p align="center">
-  <img alt="GitHub Repo Stars" src="https://img.shields.io/github/stars/lspzc/obsidian-diary-merger">
-  <img alt="GitHub Repo Forks" src="https://img.shields.io/github/forks/lspzc/obsidian-diary-merger">
+  <img alt="GitHub Repo Stars" src="https://img.shields.io/github/stars/lspzc/obsidian-inlineCode-copy">
+  <img alt="GitHub Repo Forks" src="https://img.shields.io/github/forks/lspzc/obsidian-inlineCode-copy">
 </p>
 
 <p align="center">
-  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/lspzc/obsidian-diary-merger">
-  <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/lspzc/obsidian-diary-merger/total">
-  <img alt="GitHub Repo License" src="https://img.shields.io/github/license/lspzc/obsidian-diary-merger">
-  <img alt="GitHub Repo Issues" src="https://img.shields.io/github/issues/lspzc/obsidian-diary-merger">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/lspzc/obsidian-inlineCode-copy">
+  <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/lspzc/obsidian-inlineCode-copy/total">
+  <img alt="GitHub Repo License" src="https://img.shields.io/github/license/lspzc/obsidian-inlineCode-copy">
+  <img alt="GitHub Repo Issues" src="https://img.shields.io/github/issues/lspzc/obsidian-inlineCode-copy">
 </p>
 
 <p align="center">
   <a href="https://github.com/lspzc/obsidian-diary-merger/releases/download/v-1.1.0-bata/obsidian-diary-merger-v-1.1.0-bata.zip">Download</a> |
   English |
-  <a href="./README_CN.md">中文</a>
+  <a href="./README.md">中文</a>
 </p>
 
 # Plug-in: Inline Code Copy Documentation
