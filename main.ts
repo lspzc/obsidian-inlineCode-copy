@@ -4,7 +4,6 @@ import {
 	Setting,
 	PluginSettingTab,
 	TextComponent,
-	Notice,
 } from "obsidian";
 
 interface BubbleTheme {
@@ -139,7 +138,6 @@ const i18n = {
 			"Custom bubble styles with background support for gradient colors of the form linear-gradient().",
 		Precautions3: "Plugin Documentation Address: ",
 		Precautions4: "If you encounter problems, you can",
-		bubbleThemeUpdate: "Bubbles theme update to : ",
 	},
 	zh: {
 		copied: (text: string) => `已复制: ${text}`,
@@ -184,7 +182,6 @@ const i18n = {
 		Precautions2: "自定义气泡背景支持 linear-gradient() 形式渐变色",
 		Precautions3: "插件文档地址：",
 		Precautions4: "如果遇到问题，可以",
-		bubbleThemeUpdate: "气泡主题已自动切换为: ",
 	},
 };
 
@@ -286,7 +283,6 @@ export default class ClickToCopyPlugin extends Plugin {
 	}
 
 	private showBubble(element: Element, message: string) {
-		const lang = this.settings.language;
 		// 移除现有的气泡
 		const existingBubble = document.querySelector(".click-to-copy-bubble");
 		if (existingBubble) existingBubble.remove();
@@ -312,34 +308,9 @@ export default class ClickToCopyPlugin extends Plugin {
 			currentTheme = PRESET_THEMES[0];
 		}
 
-		// 监听主题变化,根据主题变化应用气泡主题
-		this.app.workspace.on("css-change", async () => {
-			// 判断当前是否是暗色主题
-			const isDarkMode = document.body.classList.contains("theme-dark");
-			currentTheme = isDarkMode ? PRESET_THEMES[0] : PRESET_THEMES[1];
-			// 应用新主题样式
-			bubbleEl.style.background = currentTheme.bgColor;
-			bubbleEl.style.color = currentTheme.textColor;
-			// 同时更新插件设置
-			this.settings.bubbleTheme = isDarkMode
-				? "darkDefault"
-				: "lightDefault";
-			await this.saveSettings();
-
-			// 通知用户设置已更新，这里需要obsidian重启才能实现 i8n
-			new Notice(
-				i18n[lang].bubbleThemeUpdate + `${this.settings.bubbleTheme}`
-			);
-		});
-		// 初始设置（确保第一次加载时也应用正确的主题）
-		const initialDarkMode = document.body.classList.contains("theme-dark");
-		currentTheme = initialDarkMode ? PRESET_THEMES[0] : PRESET_THEMES[1];
+		// 应用样式
 		bubbleEl.style.background = currentTheme.bgColor;
 		bubbleEl.style.color = currentTheme.textColor;
-
-		// 应用样式
-		// bubbleEl.style.background = currentTheme.bgColor;
-		// bubbleEl.style.color = currentTheme.textColor;
 
 		document.body.appendChild(bubbleEl);
 
