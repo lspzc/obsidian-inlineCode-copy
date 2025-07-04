@@ -4,6 +4,7 @@ import {
 	Setting,
 	PluginSettingTab,
 	TextComponent,
+	Notice,
 } from "obsidian";
 
 interface BubbleTheme {
@@ -16,6 +17,7 @@ interface ClickToCopySettings {
 	enableLivePreview: boolean;
 	livePreviewTrigger: "click" | "dblclick";
 	showBubble: boolean;
+	showBubbleText: boolean;
 	bubbleDuration: number;
 	bubblePosition: "top" | "bottom" | "left" | "right";
 	bubbleTheme: string; // 存储当前选择的主题名称
@@ -28,6 +30,7 @@ const DEFAULT_SETTINGS: ClickToCopySettings = {
 	enableLivePreview: true,
 	livePreviewTrigger: "dblclick",
 	showBubble: true,
+	showBubbleText: true,
 	bubbleDuration: 1500,
 	bubblePosition: "top",
 	bubbleTheme: "default",
@@ -39,9 +42,14 @@ const DEFAULT_SETTINGS: ClickToCopySettings = {
 // 预设主题
 const PRESET_THEMES: BubbleTheme[] = [
 	{
-		name: "default",
-		bgColor: "#181818",
-		textColor: "#ffffff",
+		name: "darkDefault",
+		bgColor: "#292433",
+		textColor: "#a68af1",
+	},
+	{
+		name: "lightDefault",
+		bgColor: "#f3eefd",
+		textColor: "#9166ed",
 	},
 	{
 		name: "深邃夜空 | midnight-sky",
@@ -86,7 +94,8 @@ const PRESET_THEMES: BubbleTheme[] = [
 const i18n = {
 	en: {
 		copied: (text: string) => `Copied: ${text}`,
-		copyFailed: "Copy failed!",
+		copySuccess: "Copy Success!",
+		copyFailed: "Copy Failed!",
 		settingsTitle: "Inline Code Copy Settings",
 		language: "Language",
 		languageDesc: "Select display language",
@@ -96,6 +105,9 @@ const i18n = {
 		livePreviewTriggerDesc: "How to trigger copy in editing mode",
 		showBubble: "Show Bubble Notification",
 		showBubbleDesc: "Toggle the bubble notification when copying",
+		showBubbleText: "Whether to display text",
+		showBubbleTextDesc:
+			"Whether or not the copied text is displayed in the bubble tip",
 		bubblePosition: "Bubble Position",
 		bubblePositionDesc: "Where to show the bubble notification",
 		bubbleBgColor: "Bubble Background",
@@ -115,10 +127,8 @@ const i18n = {
 		bubbleTheme: "Bubble Theme",
 		bubbleThemeDesc: "Select a predefined theme for the bubble",
 		addCustomTheme: "Add Custom Theme",
-		addCustomThemeDesc: "Create your own bubble theme",
-		themeNamePlaceholder: "Theme name",
-		bgColorPlaceholder: "Background (CSS value)",
-		textColorPlaceholder: "Text color (CSS value)",
+		addCustomThemeDesc:
+			"Input Format: Theme Name | Background Color | Text Color",
 		addThemeButton: "Add Theme",
 		deleteThemeButton: "Delete",
 		customThemesTitle: "Your Custom Themes",
@@ -129,10 +139,12 @@ const i18n = {
 			"Custom bubble styles with background support for gradient colors of the form linear-gradient().",
 		Precautions3: "Plugin Documentation Address: ",
 		Precautions4: "If you encounter problems, you can",
+		bubbleThemeUpdate: "Bubbles theme update to : ",
 	},
 	zh: {
 		copied: (text: string) => `已复制: ${text}`,
-		copyFailed: "复制失败!",
+		copySuccess: "复制成功！",
+		copyFailed: "复制失败！",
 		settingsTitle: "行内代码复制插件设置",
 		language: "语言",
 		languageDesc: "选择显示语言",
@@ -142,6 +154,8 @@ const i18n = {
 		livePreviewTriggerDesc: "在编辑模式下如何触发复制",
 		showBubble: "显示气泡提示",
 		showBubbleDesc: "复制时是否显示气泡提示",
+		showBubbleText: "是否显示文本",
+		showBubbleTextDesc: "气泡提示中是否显示被复制的文本",
 		bubblePosition: "气泡位置",
 		bubblePositionDesc: "气泡提示显示的位置",
 		bubbleBgColor: "气泡背景",
@@ -161,10 +175,7 @@ const i18n = {
 		bubbleTheme: "气泡主题",
 		bubbleThemeDesc: "选择预设的气泡样式主题",
 		addCustomTheme: "添加自定义主题",
-		addCustomThemeDesc: "创建你自己的气泡样式",
-		themeNamePlaceholder: "主题名称",
-		bgColorPlaceholder: "背景色(CSS值)",
-		textColorPlaceholder: "文字颜色(CSS值)",
+		addCustomThemeDesc: "输入格式：主题名称 | 背景颜色 | 文字颜色",
 		addThemeButton: "添加主题",
 		deleteThemeButton: "删除",
 		customThemesTitle: "你的自定义主题",
@@ -173,6 +184,7 @@ const i18n = {
 		Precautions2: "自定义气泡背景支持 linear-gradient() 形式渐变色",
 		Precautions3: "插件文档地址：",
 		Precautions4: "如果遇到问题，可以",
+		bubbleThemeUpdate: "气泡主题已自动切换为: ",
 	},
 };
 
@@ -195,7 +207,17 @@ export default class ClickToCopyPlugin extends Plugin {
 		// 添加设置选项卡
 		this.addSettingTab(new ClickToCopySettingTab(this.app, this));
 
+		// 初始化时检查主题
+		const initialDarkMode = document.body.classList.contains("theme-dark");
+		if (initialDarkMode) {
+			this.settings.bubbleTheme = "darkDefault";
+		} else {
+			this.settings.bubbleTheme = "lightDefault";
+		}
+		await this.saveSettings();
+
 		console.log("Click to Copy plugin loaded successfully");
+		console.log(`初始化气泡主题为： ${this.settings.bubbleTheme} `);
 	}
 
 	private handleClick(event: MouseEvent) {
@@ -247,10 +269,11 @@ export default class ClickToCopyPlugin extends Plugin {
 				// 显示气泡提示
 				if (this.settings.showBubble) {
 					const lang = this.settings.language;
-					this.showBubble(
-						codeElement,
-						i18n[lang].copied(codeContent)
-					);
+					const bubbleText = this.settings.showBubbleText
+						? i18n[lang].copied(codeContent)
+						: i18n[lang].copySuccess;
+
+					this.showBubble(codeElement, bubbleText);
 				}
 			})
 			.catch((err) => {
@@ -263,6 +286,7 @@ export default class ClickToCopyPlugin extends Plugin {
 	}
 
 	private showBubble(element: Element, message: string) {
+		const lang = this.settings.language;
 		// 移除现有的气泡
 		const existingBubble = document.querySelector(".click-to-copy-bubble");
 		if (existingBubble) existingBubble.remove();
@@ -282,14 +306,40 @@ export default class ClickToCopyPlugin extends Plugin {
 			);
 		}
 
+		// TODO 这里有问题
 		// 如果没找到，使用默认主题
 		if (!currentTheme) {
 			currentTheme = PRESET_THEMES[0];
 		}
 
-		// 应用样式
+		// 监听主题变化,根据主题变化应用气泡主题
+		this.app.workspace.on("css-change", async () => {
+			// 判断当前是否是暗色主题
+			const isDarkMode = document.body.classList.contains("theme-dark");
+			currentTheme = isDarkMode ? PRESET_THEMES[0] : PRESET_THEMES[1];
+			// 应用新主题样式
+			bubbleEl.style.background = currentTheme.bgColor;
+			bubbleEl.style.color = currentTheme.textColor;
+			// 同时更新插件设置
+			this.settings.bubbleTheme = isDarkMode
+				? "darkDefault"
+				: "lightDefault";
+			await this.saveSettings();
+
+			// 通知用户设置已更新，这里需要obsidian重启才能实现 i8n
+			new Notice(
+				i18n[lang].bubbleThemeUpdate + `${this.settings.bubbleTheme}`
+			);
+		});
+		// 初始设置（确保第一次加载时也应用正确的主题）
+		const initialDarkMode = document.body.classList.contains("theme-dark");
+		currentTheme = initialDarkMode ? PRESET_THEMES[0] : PRESET_THEMES[1];
 		bubbleEl.style.background = currentTheme.bgColor;
 		bubbleEl.style.color = currentTheme.textColor;
+
+		// 应用样式
+		// bubbleEl.style.background = currentTheme.bgColor;
+		// bubbleEl.style.color = currentTheme.textColor;
 
 		document.body.appendChild(bubbleEl);
 
@@ -363,6 +413,7 @@ export default class ClickToCopyPlugin extends Plugin {
 
 class ClickToCopySettingTab extends PluginSettingTab {
 	plugin: ClickToCopyPlugin;
+	combinedInput: TextComponent;
 	hemeNameInput: TextComponent;
 	bgColorInput: TextComponent;
 	textColorInput: TextComponent;
@@ -472,6 +523,19 @@ class ClickToCopySettingTab extends PluginSettingTab {
 					})
 			);
 
+		// 气泡提示是否显示复制文本
+		new Setting(containerEl)
+			.setName(t.showBubbleText)
+			.setDesc(t.showBubbleTextDesc)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.showBubbleText)
+					.onChange(async (value) => {
+						this.plugin.settings.showBubbleText = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
 		// 气泡位置
 		new Setting(containerEl)
 			.setName(t.bubblePosition)
@@ -520,28 +584,19 @@ class ClickToCopySettingTab extends PluginSettingTab {
 		);
 
 		// 添加新主题的表单
-		// 修正后的自定义主题添加部分
+		// 自定义主题添加
 		new Setting(customThemeContainer)
 			.setName(t.addCustomTheme)
 			.setDesc(t.addCustomThemeDesc)
 			.addText((text) => {
-				text.setPlaceholder(t.themeNamePlaceholder).setValue("");
+				text.setPlaceholder("").setValue("");
 				// 存储文本组件引用
-				this.hemeNameInput = text;
-			})
-			.addText((text) => {
-				text.setPlaceholder(t.bgColorPlaceholder).setValue("");
-				this.bgColorInput = text;
-			})
-			.addText((text) => {
-				text.setPlaceholder(t.textColorPlaceholder).setValue("");
-				this.textColorInput = text;
+				this.combinedInput = text;
 			})
 			.addButton((button) =>
 				button.setButtonText(t.addThemeButton).onClick(async () => {
-					const name = this.hemeNameInput.getValue();
-					const bgColor = this.bgColorInput.getValue();
-					const textColor = this.textColorInput.getValue();
+					const combinedInput = this.combinedInput.getValue();
+					const [name, bgColor, textColor] = combinedInput.split(",");
 
 					if (name && bgColor && textColor) {
 						this.plugin.settings.customThemes.push({
@@ -553,9 +608,7 @@ class ClickToCopySettingTab extends PluginSettingTab {
 						this.display(); // 刷新设置面板
 
 						// 清空输入框
-						this.hemeNameInput.setValue("");
-						this.bgColorInput.setValue("");
-						this.textColorInput.setValue("");
+						this.combinedInput.setValue("");
 					}
 				})
 			);
