@@ -72,19 +72,35 @@
 /* ===== 用户设置界面样式 ===== */
 .tip {
     border: 1px solid var(--background-modifier-border);
-    padding: 10px;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    background-color: var(--background-primary-alt);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .tip_title {
     font-weight: 600;
-    color: red;
+    color: var(--text-accent);
+    margin-bottom: 8px;
+    font-size: 16px;
 }
 
 .tip_txt {
-    /* color: red; */
+    color: var(--text-muted);
     white-space: pre-line;
+    line-height: 1.5;
+    font-size: 14px;
 }
 
 .inline-code-copy-smallTip-link {
     text-decoration: none;
+    color: var(--text-accent);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.inline-code-copy-smallTip-link:hover {
+    color: var(--text-accent-hover);
+    text-decoration: underline;
 }

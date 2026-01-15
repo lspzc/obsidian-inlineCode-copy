@@ -5,6 +5,7 @@ import {
 	PluginSettingTab,
 	TextComponent,
 } from "obsidian";
+import { i18n } from "./i18n";
 
 interface BubbleTheme {
 	name: string;
@@ -42,148 +43,50 @@ const DEFAULT_SETTINGS: ClickToCopySettings = {
 const PRESET_THEMES: BubbleTheme[] = [
 	{
 		name: "darkDefault",
-		bgColor: "#292433",
-		textColor: "#a68af1",
+		bgColor: "#242424",
+		textColor: "#dadada",
 	},
 	{
 		name: "lightDefault",
-		bgColor: "#f3eefd",
-		textColor: "#9166ed",
+		bgColor: "#fafafa",
+		textColor: "#22224c",
 	},
 	{
 		name: "深邃夜空 | midnight-sky",
-		bgColor:
-			"linear-gradient(90deg, #0F2027 0%, #203A43 50%, #2C5364 100%)",
+		bgColor: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
 		textColor: "#ffffff",
 	},
 	{
 		name: "极光紫雾 | aurora-purple",
-		bgColor: "linear-gradient(to right, #654EA3 0%, #EAAFC8 100%)",
+		bgColor: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)",
 		textColor: "#ffffff",
 	},
 	{
 		name: "落日熔金 | sunset-gold",
-		bgColor: "linear-gradient(45deg, #FF416C 0%, #FF4B2B 100%)",
+		bgColor: "linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)",
 		textColor: "#ffffff",
 	},
 	{
 		name: "冰川之境 | glacier-blue",
-		bgColor: "linear-gradient(135deg, #00B4DB 0%, #0083B0 100%)",
+		bgColor: "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
 		textColor: "#ffffff",
 	},
 	{
 		name: "莫兰迪灰粉 | muted-pink",
-		bgColor: "linear-gradient(to bottom, #E6DADA 0%, #274046 100%)",
-		textColor: "#333333",
+		bgColor: "linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)",
+		textColor: "#ffffff",
 	},
 	{
-		name: "黑金奢华 | black-gold",
-		bgColor:
-			"linear-gradient(90deg, #000000 0%, #434343 50%, #000000 100%)",
-		textColor: "#FFD700",
+		name: "森林绿 | forest-green",
+		bgColor: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+		textColor: "#ffffff",
 	},
 	{
-		name: "翡翠绿 | emerald-green",
-		bgColor: "linear-gradient(120deg, #11998E 0%, #38EF7D 100%)",
+		name: "琥珀橙 | amber-orange",
+		bgColor: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
 		textColor: "#ffffff",
 	},
 ];
-
-// 多语言包
-const i18n = {
-	en: {
-		copied: (text: string) => `Copied: ${text}`,
-		copySuccess: "Copy Success!",
-		copyFailed: "Copy Failed!",
-		settingsTitle: "Inline Code Copy Settings",
-		language: "Language",
-		languageDesc: "Select display language",
-		enableLivePreview: "Enable Live Preview",
-		enableLivePreviewDesc: "Toggle copying in editing mode",
-		livePreviewTrigger: "Live Preview Trigger",
-		livePreviewTriggerDesc: "How to trigger copy in editing mode",
-		showBubble: "Show Bubble Notification",
-		showBubbleDesc: "Toggle the bubble notification when copying",
-		showBubbleText: "Whether to display text",
-		showBubbleTextDesc:
-			"Whether or not the copied text is displayed in the bubble tip",
-		bubblePosition: "Bubble Position",
-		bubblePositionDesc: "Where to show the bubble notification",
-		bubbleBgColor: "Bubble Background",
-		bubbleBgColorDesc: "Background color/style for the bubble",
-		bubbleTextColor: "Bubble Text Color",
-		bubbleTextColorDesc: "Text color for the bubble",
-		bubbleDuration: "Bubble Duration (ms)",
-		bubbleDurationDesc: "How long the bubble stays visible",
-		feedbackDuration: "Feedback Duration (ms)",
-		feedbackDurationDesc: "How long the highlight effect lasts",
-		singleClick: "Single Click",
-		doubleClick: "Double Click",
-		top: "Top",
-		bottom: "Bottom",
-		left: "Left",
-		right: "Right",
-		bubbleTheme: "Bubble Theme",
-		bubbleThemeDesc: "Select a predefined theme for the bubble",
-		addCustomTheme: "Add Custom Theme",
-		addCustomThemeDesc:
-			"Input Format: Theme Name | Background Color | Text Color",
-		addThemeButton: "Add Theme",
-		deleteThemeButton: "Delete",
-		customThemesTitle: "Your Custom Themes",
-		Precautions: "Plug-in Notes",
-		Precautions1:
-			"If you find that the changes do not work, restart Obsidian",
-		Precautions2:
-			"Custom bubble styles with background support for gradient colors of the form linear-gradient().",
-		Precautions3: "Plugin Documentation Address: ",
-		Precautions4: "If you encounter problems, you can",
-	},
-	zh: {
-		copied: (text: string) => `已复制: ${text}`,
-		copySuccess: "复制成功！",
-		copyFailed: "复制失败！",
-		settingsTitle: "行内代码复制插件设置",
-		language: "语言",
-		languageDesc: "选择显示语言",
-		enableLivePreview: "启用实时预览复制",
-		enableLivePreviewDesc: "开启或关闭编辑模式下的复制功能",
-		livePreviewTrigger: "实时预览触发方式",
-		livePreviewTriggerDesc: "在编辑模式下如何触发复制",
-		showBubble: "显示气泡提示",
-		showBubbleDesc: "复制时是否显示气泡提示",
-		showBubbleText: "是否显示文本",
-		showBubbleTextDesc: "气泡提示中是否显示被复制的文本",
-		bubblePosition: "气泡位置",
-		bubblePositionDesc: "气泡提示显示的位置",
-		bubbleBgColor: "气泡背景",
-		bubbleBgColorDesc: "气泡的背景颜色或样式（支持CSS）",
-		bubbleTextColor: "气泡文字颜色",
-		bubbleTextColorDesc: "气泡内文字的颜色",
-		bubbleDuration: "气泡显示时间(毫秒)",
-		bubbleDurationDesc: "气泡提示持续显示的时间",
-		feedbackDuration: "反馈效果时间(毫秒)",
-		feedbackDurationDesc: "复制成功时高亮效果的持续时间",
-		singleClick: "单击",
-		doubleClick: "双击",
-		top: "上方",
-		bottom: "下方",
-		left: "左侧",
-		right: "右侧",
-		bubbleTheme: "气泡主题",
-		bubbleThemeDesc: "选择预设的气泡样式主题",
-		addCustomTheme: "添加自定义主题",
-		addCustomThemeDesc: "输入格式：主题名称 | 背景颜色 | 文字颜色",
-		addThemeButton: "添加主题",
-		deleteThemeButton: "删除",
-		customThemesTitle: "你的自定义主题",
-		Precautions: "插件注意事项",
-		Precautions1: "如果发现更改无效，请重新启动 Obsidian",
-		Precautions2: "自定义气泡背景支持 linear-gradient() 形式渐变色",
-		Precautions3: "插件文档地址：",
-		Precautions4: "如果遇到问题，可以",
-	},
-};
 
 export default class ClickToCopyPlugin extends Plugin {
 	settings: ClickToCopySettings;
@@ -201,27 +104,37 @@ export default class ClickToCopyPlugin extends Plugin {
 			this.handleDoubleClick.bind(this)
 		);
 
+		// 注册实时预览模式单击事件（根据设置决定是否触发）
+		this.registerDomEvent(
+			document,
+			"click",
+			this.handleLivePreviewClick.bind(this)
+		);
+
 		// 添加设置选项卡
 		this.addSettingTab(new ClickToCopySettingTab(this.app, this));
 
-		// 初始化时检查主题
-		const initialDarkMode = document.body.classList.contains("theme-dark");
-		if (initialDarkMode) {
-			this.settings.bubbleTheme = "darkDefault";
-		} else {
-			this.settings.bubbleTheme = "lightDefault";
+		// 只有当主题未设置时（第一次安装），才根据当前主题模式设置默认主题
+		if (this.settings.bubbleTheme === DEFAULT_SETTINGS.bubbleTheme) {
+			const initialDarkMode =
+				document.body.classList.contains("theme-dark");
+			this.settings.bubbleTheme = initialDarkMode
+				? "darkDefault"
+				: "lightDefault";
+			await this.saveSettings();
 		}
-		await this.saveSettings();
 
 		console.log("Click to Copy plugin loaded successfully");
-		console.log(`初始化气泡主题为： ${this.settings.bubbleTheme} `);
 	}
 
 	private handleClick(event: MouseEvent) {
 		const target = event.target as HTMLElement;
 
-		// 只处理阅读模式
-		if (target.closest(".markdown-reading-view")) {
+		// 检查是否是阅读模式下的代码元素点击
+		if (
+			target.matches(".markdown-reading-view code") ||
+			target.closest(".markdown-reading-view code")
+		) {
 			this.processCodeElement(target, "code");
 		}
 	}
@@ -235,8 +148,29 @@ export default class ClickToCopyPlugin extends Plugin {
 		// 检查是否是双击触发模式
 		if (this.settings.livePreviewTrigger !== "dblclick") return;
 
-		// 处理实时预览模式
-		if (target.closest(".cm-content")) {
+		// 检查是否是实时预览模式下的行内代码元素点击
+		if (
+			target.matches(".cm-content span.cm-inline-code") ||
+			target.closest(".cm-content span.cm-inline-code")
+		) {
+			this.processCodeElement(target, "span.cm-inline-code");
+		}
+	}
+
+	private handleLivePreviewClick(event: MouseEvent) {
+		const target = event.target as HTMLElement;
+
+		// 检查是否启用实时预览模式复制
+		if (!this.settings.enableLivePreview) return;
+
+		// 检查是否是单击触发模式
+		if (this.settings.livePreviewTrigger !== "click") return;
+
+		// 检查是否是实时预览模式下的行内代码元素点击
+		if (
+			target.matches(".cm-content span.cm-inline-code") ||
+			target.closest(".cm-content span.cm-inline-code")
+		) {
 			this.processCodeElement(target, "span.cm-inline-code");
 		}
 	}
@@ -253,24 +187,60 @@ export default class ClickToCopyPlugin extends Plugin {
 			codeContent = rawText.slice(1, -1);
 		}
 
-		// 复制到剪贴板
-		navigator.clipboard
-			.writeText(codeContent)
-			.then(() => {
-				// 添加视觉反馈
-				codeElement.classList.add("copied");
-				setTimeout(() => {
-					codeElement.classList.remove("copied");
-				}, this.settings.feedbackDuration);
+		// 复制到剪贴板（支持降级方案）
+		const copyToClipboard = async (text: string): Promise<boolean> => {
+			try {
+				// 优先使用现代剪贴板API
+				await navigator.clipboard.writeText(text);
+				return true;
+			} catch (err) {
+				// 降级方案：使用传统的document.execCommand('copy')
+				const textArea = document.createElement("textarea");
+				textArea.value = text;
+				textArea.style.position = "fixed";
+				textArea.style.opacity = "0";
+				document.body.appendChild(textArea);
+				textArea.select();
 
-				// 显示气泡提示
-				if (this.settings.showBubble) {
-					const lang = this.settings.language;
-					const bubbleText = this.settings.showBubbleText
-						? i18n[lang].copied(codeContent)
-						: i18n[lang].copySuccess;
+				try {
+					const success = document.execCommand("copy");
+					document.body.removeChild(textArea);
+					return success;
+				} catch (fallbackErr) {
+					document.body.removeChild(textArea);
+					console.error(
+						"Clipboard API fallback failed:",
+						fallbackErr
+					);
+					return false;
+				}
+			}
+		};
 
-					this.showBubble(codeElement, bubbleText);
+		// 执行复制操作
+		copyToClipboard(codeContent)
+			.then((success) => {
+				if (success) {
+					// 添加视觉反馈
+					codeElement.classList.add("copied");
+					setTimeout(() => {
+						codeElement.classList.remove("copied");
+					}, this.settings.feedbackDuration);
+
+					// 显示气泡提示
+					if (this.settings.showBubble) {
+						const lang = this.settings.language;
+						const bubbleText = this.settings.showBubbleText
+							? i18n[lang].copied(codeContent)
+							: i18n[lang].copySuccess;
+
+						this.showBubble(codeElement, bubbleText);
+					}
+				} else {
+					if (this.settings.showBubble) {
+						const lang = this.settings.language;
+						this.showBubble(codeElement, i18n[lang].copyFailed);
+					}
 				}
 			})
 			.catch((err) => {
@@ -282,16 +252,10 @@ export default class ClickToCopyPlugin extends Plugin {
 			});
 	}
 
-	private showBubble(element: Element, message: string) {
-		// 移除现有的气泡
-		const existingBubble = document.querySelector(".click-to-copy-bubble");
-		if (existingBubble) existingBubble.remove();
-
-		const bubbleEl = document.createElement("div");
-		bubbleEl.textContent = message;
-		bubbleEl.className = "click-to-copy-bubble";
-
-		// 应用用户自定义样式
+	/**
+	 * 获取当前选择的主题
+	 */
+	private getCurrentTheme(): BubbleTheme {
 		// 查找当前选择的主题
 		let currentTheme = PRESET_THEMES.find(
 			(t) => t.name === this.settings.bubbleTheme
@@ -302,17 +266,41 @@ export default class ClickToCopyPlugin extends Plugin {
 			);
 		}
 
-		// TODO 这里有问题
 		// 如果没找到，使用默认主题
 		if (!currentTheme) {
-			currentTheme = PRESET_THEMES[0];
+			const isDarkMode = document.body.classList.contains("theme-dark");
+			currentTheme = isDarkMode ? PRESET_THEMES[0] : PRESET_THEMES[1];
 		}
+
+		return currentTheme;
+	}
+
+	private showBubble(element: Element, message: string) {
+		// 查找或创建气泡元素
+		let bubbleEl = document.querySelector(
+			".click-to-copy-bubble"
+		) as HTMLDivElement;
+
+		// 如果气泡不存在，则创建新气泡
+		if (!bubbleEl) {
+			bubbleEl = document.createElement("div");
+			bubbleEl.className = "click-to-copy-bubble";
+			document.body.appendChild(bubbleEl);
+		}
+
+		// 重置气泡状态
+		bubbleEl.classList.remove("fade-out");
+		bubbleEl.style.display = "block";
+
+		// 设置气泡内容
+		bubbleEl.textContent = message;
+
+		// 获取当前主题
+		const currentTheme = this.getCurrentTheme();
 
 		// 应用样式
 		bubbleEl.style.background = currentTheme.bgColor;
 		bubbleEl.style.color = currentTheme.textColor;
-
-		document.body.appendChild(bubbleEl);
 
 		// 计算气泡位置
 		const rect = element.getBoundingClientRect();
@@ -362,10 +350,12 @@ export default class ClickToCopyPlugin extends Plugin {
 		bubbleEl.style.top = `${top}px`;
 		bubbleEl.style.left = `${left}px`;
 
-		// 自动消失
+		// 自动消失（隐藏而非删除，以便下次复用）
 		setTimeout(() => {
 			bubbleEl.classList.add("fade-out");
-			setTimeout(() => bubbleEl.remove(), 300);
+			setTimeout(() => {
+				bubbleEl.style.display = "none";
+			}, 300);
 		}, this.settings.bubbleDuration);
 	}
 
@@ -401,9 +391,7 @@ class ClickToCopySettingTab extends PluginSettingTab {
 		const lang = this.plugin.settings.language;
 		const t = i18n[lang];
 
-		containerEl.createEl("h3", { text: t.settingsTitle });
-
-		// === 顶部提示 ===
+		// 顶部提示
 		const tip = containerEl.createEl("div", { cls: "tip" });
 		tip.createEl("div", {
 			text: t.Precautions,
@@ -567,20 +555,54 @@ class ClickToCopySettingTab extends PluginSettingTab {
 			.addButton((button) =>
 				button.setButtonText(t.addThemeButton).onClick(async () => {
 					const combinedInput = this.combinedInput.getValue();
-					const [name, bgColor, textColor] = combinedInput.split(",");
+					const [name, bgColor, textColor] = combinedInput
+						.split("|")
+						.map((item) => item.trim())
+						.filter(Boolean);
 
-					if (name && bgColor && textColor) {
-						this.plugin.settings.customThemes.push({
-							name,
-							bgColor,
-							textColor,
-						});
-						await this.plugin.saveSettings();
-						this.display(); // 刷新设置面板
-
-						// 清空输入框
-						this.combinedInput.setValue("");
+					// 验证输入格式
+					if (combinedInput.split("|").length < 3) {
+						console.warn(
+							"主题输入格式不正确，请使用 '名称 | 背景色 | 文字颜色' 格式"
+						);
+						return;
 					}
+
+					// 验证主题名称
+					if (!name) {
+						console.warn("主题名称不能为空");
+						return;
+					}
+
+					// 检查主题名称是否已存在（预设主题和自定义主题）
+					const isNameExists =
+						PRESET_THEMES.some((theme) => theme.name === name) ||
+						this.plugin.settings.customThemes.some(
+							(theme) => theme.name === name
+						);
+
+					if (isNameExists) {
+						console.warn("主题名称已存在，请使用不同的名称");
+						return;
+					}
+
+					// 验证颜色值（简单检查）
+					if (!bgColor || !textColor) {
+						console.warn("背景色和文字颜色不能为空");
+						return;
+					}
+
+					// 添加新主题
+					this.plugin.settings.customThemes.push({
+						name,
+						bgColor,
+						textColor,
+					});
+					await this.plugin.saveSettings();
+					this.display(); // 刷新设置面板
+
+					// 清空输入框
+					this.combinedInput.setValue("");
 				})
 			);
 
